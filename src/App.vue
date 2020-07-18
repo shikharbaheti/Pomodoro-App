@@ -8,6 +8,12 @@
           </v-col>
         </v-row>
       </v-container>
+      <v-container>
+        <h5 class="text-h5 text-center">
+          Developed by
+          <a href="shikharbaheti.net" target="_blank"><b>Shikhar Baheti</b></a>
+        </h5>
+      </v-container>
     </v-main>
   </v-app>
 </template>

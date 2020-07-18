@@ -2,9 +2,6 @@
   <v-card>
     <v-tabs @change="changeCurrentTimer" v-model="currentTimer" grow>
       <v-tab v-for="timer in timers" :key="timer.name">{{ timer.name }}</v-tab>
-      <!-- <v-tabs-items v-model="currentTimer">
-        <v-tab-item> </v-tab-item>
-      </v-tabs-items> -->
     </v-tabs>
     <v-card class="pa-5 d-flex flex-column justify-center align-center" flat>
       <h1 class="time">{{ displayMinutes }}:{{ displaySeconds }}</h1>
@@ -24,11 +21,19 @@
         </v-btn>
       </div>
     </v-card>
+    <Settings :dialog="dialog" />
+    <v-btn color="primary" dark medium absolute bottom left fab
+      ><v-icon>mdi-cog-outline</v-icon></v-btn
+    >
   </v-card>
 </template>
 
 <script>
+import Settings from "./Settings.vue";
 export default {
+  components: {
+    Settings,
+  },
   data() {
     return {
       isRunning: false,
@@ -40,6 +45,7 @@ export default {
         { name: "Short Break", minutes: 5 },
         { name: "Long Break", minutes: 10 },
       ],
+      dialog: false,
     };
   },
   computed: {
@@ -80,7 +86,6 @@ export default {
       this.totalSeconds = minutes * 60;
     },
     changeCurrentTimer(num) {
-      console.log(num);
       this.currentTimer = num;
       this.reset(this.timers[num].minutes);
     },
