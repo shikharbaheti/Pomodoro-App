@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-content>
+    <v-main>
       <v-container>
         <v-row>
           <v-col sm="6" offset-sm="3">
@@ -8,7 +8,7 @@
           </v-col>
         </v-row>
       </v-container>
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 
@@ -19,11 +19,11 @@ export default {
   name: "App",
 
   components: {
-    Pomodoro
+    Pomodoro,
   },
 
   data: () => ({
     //
-  })
+  }),
 };
 </script>

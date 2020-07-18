@@ -1,28 +1,29 @@
 <template>
   <v-card>
-    <v-tabs v-model="timerType" grow>
-      <v-tab v-for="tab in tabTitles" :key="tab">{{ tab }}</v-tab>
-      <v-tabs-items v-model="timerType">
-        <v-tab-item>
-          <v-card
-            color="basil"
-            class="pa-5 d-flex flex-column justify-center align-center"
-            flat
-          >
-            <h1 class="time">{{ display.minutes }}:{{ display.seconds }}</h1>
-            <div class="button-group">
-              <v-btn x-large color="primary">
-                <v-icon left>mdi-play-circle-outline</v-icon>Start
-              </v-btn>
-              <v-btn x-large color="error">
-                <v-icon left>mdi-stop-circle-outline</v-icon>Stop
-              </v-btn>
-              <v-btn x-large> <v-icon left>mdi-restart</v-icon>Reset </v-btn>
-            </div>
-          </v-card>
-        </v-tab-item>
-      </v-tabs-items>
+    <v-tabs @change="changeCurrentTimer" v-model="currentTimer" grow>
+      <v-tab v-for="timer in timers" :key="timer.name">{{ timer.name }}</v-tab>
+      <!-- <v-tabs-items v-model="currentTimer">
+        <v-tab-item> </v-tab-item>
+      </v-tabs-items> -->
     </v-tabs>
+    <v-card class="pa-5 d-flex flex-column justify-center align-center" flat>
+      <h1 class="time">{{ displayMinutes }}:{{ displaySeconds }}</h1>
+      <div class="button-group">
+        <v-btn @click="start" x-large color="primary">
+          <v-icon left>mdi-play-circle-outline</v-icon>Start
+        </v-btn>
+        <v-btn @click="stop" x-large color="error">
+          <v-icon left>mdi-stop-circle-outline</v-icon>Stop
+        </v-btn>
+        <v-btn
+          @click="reset(timers[currentTimer].minutes)"
+          :disabled="isRunning"
+          x-large
+        >
+          <v-icon left>mdi-restart</v-icon>Reset
+        </v-btn>
+      </div>
+    </v-card>
   </v-card>
 </template>
 
@@ -30,27 +31,59 @@
 export default {
   data() {
     return {
-      display: {
-        minutes: "00",
-        seconds: "00",
-      },
+      isRunning: false,
+      timerInstance: null,
       totalSeconds: 25 * 60,
-      timerType: 0,
-      tabTitles: ["Pomodoro", "Short Break", "Long Break"],
+      currentTimer: 0,
+      timers: [
+        { name: "Pomodoro", minutes: 25 },
+        { name: "Short Break", minutes: 5 },
+        { name: "Long Break", minutes: 10 },
+      ],
     };
   },
   computed: {
     displayMinutes() {
-      return Math.floor(totalSeconds / 60);
+      const minutes = Math.floor(this.totalSeconds / 60);
+      return this.formatTime(minutes);
     },
-    displaySeconds() {},
+    displaySeconds() {
+      const seconds = this.totalSeconds % 60;
+      return this.formatTime(seconds);
+    },
   },
   methods: {
-    start() {
-      setInterval(() => {}, 1000);
+    formatTime(time) {
+      if (time < 10) {
+        return "0" + time;
+      } else {
+        return time.toString();
+      }
     },
-    stop() {},
-    reset() {},
+    start() {
+      this.stop();
+      this.isRunning = true;
+      this.timerInstance = setInterval(() => {
+        if (this.totalSeconds <= 0) {
+          this.stop();
+          return;
+        }
+        this.totalSeconds -= 1;
+      }, 1000);
+    },
+    stop() {
+      this.isRunning = false;
+      clearInterval(this.timerInstance);
+    },
+    reset(minutes) {
+      this.stop();
+      this.totalSeconds = minutes * 60;
+    },
+    changeCurrentTimer(num) {
+      console.log(num);
+      this.currentTimer = num;
+      this.reset(this.timers[num].minutes);
+    },
   },
 };
 </script>
