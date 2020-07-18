@@ -1,11 +1,15 @@
 <template>
   <v-card>
     <v-tabs v-model="timerType" grow>
-      <v-tab v-for="tab in tabTitles" :key="tab">{{tab}}</v-tab>
+      <v-tab v-for="tab in tabTitles" :key="tab">{{ tab }}</v-tab>
       <v-tabs-items v-model="timerType">
         <v-tab-item>
-          <v-card color="basil" class="pa-5 d-flex flex-column justify-center align-center" flat>
-            <h1 class="time">{{display.minutes}}:{{display.seconds}}</h1>
+          <v-card
+            color="basil"
+            class="pa-5 d-flex flex-column justify-center align-center"
+            flat
+          >
+            <h1 class="time">{{ display.minutes }}:{{ display.seconds }}</h1>
             <div class="button-group">
               <v-btn x-large color="primary">
                 <v-icon left>mdi-play-circle-outline</v-icon>Start
@@ -13,9 +17,7 @@
               <v-btn x-large color="error">
                 <v-icon left>mdi-stop-circle-outline</v-icon>Stop
               </v-btn>
-              <v-btn x-large>
-                <v-icon left>mdi-restart</v-icon>Reset
-              </v-btn>
+              <v-btn x-large> <v-icon left>mdi-restart</v-icon>Reset </v-btn>
             </div>
           </v-card>
         </v-tab-item>
@@ -30,21 +32,26 @@ export default {
     return {
       display: {
         minutes: "00",
-        seconds: "00"
+        seconds: "00",
       },
-
       totalSeconds: 25 * 60,
       timerType: 0,
-      tabTitles: ["Pomodoro", "Short Break", "Long Break"]
+      tabTitles: ["Pomodoro", "Short Break", "Long Break"],
     };
+  },
+  computed: {
+    displayMinutes() {
+      return Math.floor(totalSeconds / 60);
+    },
+    displaySeconds() {},
   },
   methods: {
     start() {
       setInterval(() => {}, 1000);
     },
     stop() {},
-    reset() {}
-  }
+    reset() {},
+  },
 };
 </script>
 
