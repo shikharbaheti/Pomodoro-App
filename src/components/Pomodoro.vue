@@ -21,10 +21,12 @@
         </v-btn>
       </div>
     </v-card>
-    <Settings :dialog="dialog" />
-    <v-btn color="primary" dark medium absolute bottom left fab
-      ><v-icon>mdi-cog-outline</v-icon></v-btn
-    >
+    <Settings
+      :dialog="dialog"
+      :closeDialog="closeDialog"
+      :save="save"
+      :timers="timers"
+    />
   </v-card>
 </template>
 
@@ -33,6 +35,16 @@ import Settings from "./Settings.vue";
 export default {
   components: {
     Settings,
+  },
+  props: {
+    dialog: {
+      type: Boolean,
+      required: true,
+    },
+    closeDialog: {
+      type: Function,
+      required: true,
+    },
   },
   data() {
     return {
@@ -45,7 +57,6 @@ export default {
         { name: "Short Break", minutes: 5 },
         { name: "Long Break", minutes: 10 },
       ],
-      dialog: false,
     };
   },
   computed: {
@@ -88,6 +99,15 @@ export default {
     changeCurrentTimer(num) {
       this.currentTimer = num;
       this.reset(this.timers[num].minutes);
+    },
+    save(updateTimers) {
+      this.timers = this.timers.map((timer, i) => {
+        return {
+          ...timer,
+          minutes: parseInt(updateTimers[i]),
+        };
+      });
+      this.closeDialog();
     },
   },
 };
